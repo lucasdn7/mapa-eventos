@@ -1,6 +1,6 @@
 # mapa-eventos
 
-Mapa cartográfico interativo dos eventos de veículos antigos em Santa Catarina em 2026.
+Aplicação web single-file com mapa interativo premium dos eventos de veículos antigos em Santa Catarina em 2026.
 
 ## O que foi criado
 
@@ -31,9 +31,9 @@ O script procura códigos e nomes comuns da UF, como `42`, `4200000`, `SC` e `Sa
 
 ## Deploy no Vercel
 
-Este projeto é um site estático: o Vercel deve publicar apenas `index.html` e `santa_catarina_eventos_2026.html`, sem tentar criar uma função Python.
+Este projeto é um site estático: o Vercel deve publicar `index.html` como aplicação principal, sem tentar criar uma função Python.
 
-A configuração está em `vercel.json` e usa `@vercel/static` explicitamente para os dois HTMLs publicados. O arquivo `.vercelignore` remove `scripts/`, `*.py`, `requirements*.txt`, dados-fonte e outros arquivos auxiliares do pacote enviado ao Vercel, evitando a detecção do runtime Python que gera o erro “No python entrypoint found”.
+A configuração está em `vercel.json` e usa `@vercel/static` explicitamente para os HTMLs publicados. O arquivo `.vercelignore` remove `scripts/`, `*.py`, `requirements*.txt`, dados-fonte e outros arquivos auxiliares do pacote enviado ao Vercel, evitando a detecção do runtime Python que gera o erro “No python entrypoint found”.
 
 As dependências geoespaciais continuam em `requirements-geospatial.txt` somente para uso local, fora do deploy. Depois do deploy, abra a URL pública gerada pelo Vercel. A raiz (`/`) redireciona para o mapa interativo.
 
@@ -41,7 +41,7 @@ Se o erro persistir por configuração antiga do projeto no painel da Vercel, aj
 
 ## Ver o mapa sem Python e sem servidor local
 
-Abra o arquivo `index.html` na raiz do repositório com duplo clique. Ele redireciona automaticamente para o mapa interativo gerado em `santa_catarina_eventos_2026.html`.
+Abra o arquivo `index.html` na raiz do repositório com duplo clique. Ele contém a aplicação completa do mapa interativo em um único arquivo HTML.
 
 Se o projeto estiver publicado no Vercel, o link público será a URL do deploy apontando para `index.html`.
 

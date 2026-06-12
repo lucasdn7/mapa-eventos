@@ -3,29 +3,762 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="refresh" content="0; url=santa_catarina_eventos_2026.html" />
-  <title>Mapa de eventos em Santa Catarina</title>
+  <title>Rota dos Clássicos — SC 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQkDWCi5AG4OmoIt1m0aUSp+3sA3E7s=" crossorigin="" />
   <style>
-    body {
-      align-items: center;
-      background: #07111f;
-      color: #f8fafc;
-      display: flex;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 24px;
-      text-align: center;
+    :root {
+      --bg: #0f1117;
+      --bg-2: #121826;
+      --panel: rgba(18, 24, 38, .86);
+      --panel-2: rgba(25, 34, 52, .92);
+      --line: rgba(255, 255, 255, .12);
+      --text: #f8fafc;
+      --muted: #9ca3af;
+      --soft: #cbd5e1;
+      --accent: #38bdf8;
+      --shadow: 0 24px 80px rgba(0, 0, 0, .38);
+      --radius: 26px;
     }
-    a { color: #ffb703; font-weight: 700; }
+
+    * { box-sizing: border-box; }
+
+    html, body { min-height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(59, 130, 246, .20), transparent 34%),
+        radial-gradient(circle at 88% 12%, rgba(139, 92, 246, .18), transparent 30%),
+        linear-gradient(135deg, #0b0d13, var(--bg) 50%, #101827);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,.026) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.026) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: linear-gradient(to bottom, black, transparent 80%);
+      z-index: -1;
+    }
+
+    .leaflet-container { overflow: hidden; position: relative; outline-offset: 1px; touch-action: none; font-family: Inter, sans-serif; background: #111827; }
+    .leaflet-pane, .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-tile-container, .leaflet-pane > svg, .leaflet-pane > canvas, .leaflet-zoom-box, .leaflet-image-layer, .leaflet-layer { left: 0; position: absolute; top: 0; }
+    .leaflet-container img.leaflet-tile { border: 0; height: 256px; max-width: none !important; padding: 0; width: 256px; }
+    .leaflet-container .leaflet-marker-icon { display: block; }
+    .leaflet-tile-pane { z-index: 200; }
+    .leaflet-overlay-pane { z-index: 400; }
+    .leaflet-shadow-pane { z-index: 500; }
+    .leaflet-marker-pane { z-index: 600; }
+    .leaflet-tooltip-pane { z-index: 650; }
+    .leaflet-popup-pane { z-index: 700; }
+    .leaflet-control { position: relative; z-index: 800; }
+    .leaflet-top, .leaflet-bottom { pointer-events: none; position: absolute; z-index: 1000; }
+    .leaflet-top { top: 0; }
+    .leaflet-right { right: 0; }
+    .leaflet-bottom { bottom: 0; }
+    .leaflet-left { left: 0; }
+    .leaflet-control { clear: both; float: left; pointer-events: auto; }
+    .leaflet-right .leaflet-control { float: right; }
+    .leaflet-top .leaflet-control { margin-top: 10px; }
+    .leaflet-bottom .leaflet-control { margin-bottom: 10px; }
+    .leaflet-left .leaflet-control { margin-left: 10px; }
+    .leaflet-right .leaflet-control { margin-right: 10px; }
+    .leaflet-popup { margin-bottom: 20px; position: absolute; text-align: center; }
+    .leaflet-popup-content-wrapper { background: #111827; border: 1px solid rgba(255,255,255,.14); border-radius: 18px; box-shadow: 0 18px 45px rgba(0,0,0,.45); color: var(--text); padding: 1px; text-align: left; }
+    .leaflet-popup-content { margin: 16px 18px; min-width: 260px; }
+    .leaflet-popup-tip-container { height: 20px; left: 50%; margin-left: -20px; overflow: hidden; pointer-events: none; position: absolute; width: 40px; }
+    .leaflet-popup-tip { background: #111827; box-shadow: 0 3px 14px rgba(0,0,0,.35); height: 17px; margin: -10px auto 0; padding: 1px; transform: rotate(45deg); width: 17px; }
+    .leaflet-tooltip { background: rgba(15, 17, 23, .95); border: 1px solid rgba(255,255,255,.18); border-radius: 12px; box-shadow: 0 10px 26px rgba(0,0,0,.35); color: #fff; padding: 8px 10px; position: absolute; white-space: nowrap; }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: clamp(18px, 3vw, 34px);
+      gap: 22px;
+    }
+
+    .hero {
+      align-items: flex-start;
+      display: flex;
+      gap: 22px;
+      justify-content: space-between;
+    }
+
+    .eyebrow {
+      align-items: center;
+      color: var(--soft);
+      display: flex;
+      font-size: .88rem;
+      font-weight: 700;
+      gap: 10px;
+      letter-spacing: .08em;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .pulse-dot {
+      background: #22c55e;
+      border-radius: 999px;
+      box-shadow: 0 0 0 0 rgba(34,197,94,.7);
+      height: 10px;
+      width: 10px;
+      animation: pulse 1.8s infinite;
+    }
+
+    h1 {
+      font-size: clamp(2.35rem, 6vw, 5.4rem);
+      letter-spacing: -.07em;
+      line-height: .9;
+      margin: 0;
+      max-width: 980px;
+    }
+
+    .subtitle {
+      color: var(--soft);
+      font-size: clamp(.98rem, 1.6vw, 1.2rem);
+      line-height: 1.55;
+      margin: 18px 0 0;
+      max-width: 870px;
+    }
+
+    .hero-actions {
+      align-items: flex-end;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 230px;
+    }
+
+    .badge {
+      align-items: center;
+      background: linear-gradient(135deg, rgba(56,189,248,.22), rgba(139,92,246,.24));
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 999px;
+      box-shadow: 0 0 30px rgba(56,189,248,.18);
+      display: inline-flex;
+      font-weight: 900;
+      gap: 10px;
+      padding: 12px 16px;
+      animation: floatBadge 3.2s ease-in-out infinite;
+    }
+
+    .total-distance {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 20px;
+      padding: 14px 16px;
+      text-align: right;
+    }
+
+    .total-distance strong { display: block; font-size: 1.4rem; letter-spacing: -.03em; }
+    .total-distance span { color: var(--muted); font-size: .82rem; }
+
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(0, 65fr) minmax(340px, 35fr);
+      gap: 22px;
+      min-height: calc(100vh - 230px);
+    }
+
+    .map-card, .side-panel {
+      background: linear-gradient(180deg, rgba(18, 24, 38, .88), rgba(13, 18, 29, .92));
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .map-card { min-height: 720px; padding: 16px; }
+
+    #map {
+      border-radius: 20px;
+      height: 100%;
+      min-height: 688px;
+      overflow: hidden;
+    }
+
+    .map-tools {
+      display: flex;
+      gap: 10px;
+      left: 30px;
+      position: absolute;
+      top: 30px;
+      z-index: 900;
+    }
+
+    .tool-btn, .zoom-btn, .chip, .month-filter {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .tool-btn {
+      align-items: center;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 17, 23, .82);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 14px;
+      color: var(--text);
+      display: inline-flex;
+      font-size: .88rem;
+      font-weight: 800;
+      gap: 8px;
+      padding: 11px 13px;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .tool-btn:hover { background: rgba(31,41,55,.92); border-color: rgba(56,189,248,.5); transform: translateY(-1px); }
+
+    .zoom-control {
+      display: grid;
+      gap: 8px;
+      position: absolute;
+      right: 30px;
+      top: 30px;
+      z-index: 900;
+    }
+
+    .zoom-btn {
+      align-items: center;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 17, 23, .86);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 14px;
+      color: #fff;
+      display: flex;
+      font-size: 1.35rem;
+      font-weight: 900;
+      height: 42px;
+      justify-content: center;
+      width: 42px;
+    }
+
+    .zoom-btn:hover { border-color: rgba(56,189,248,.6); }
+
+    .active-month {
+      backdrop-filter: blur(14px);
+      background: rgba(15, 17, 23, .86);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      bottom: 30px;
+      box-shadow: 0 14px 35px rgba(0,0,0,.28);
+      min-width: 190px;
+      padding: 13px 14px;
+      position: absolute;
+      right: 30px;
+      z-index: 900;
+    }
+
+    .active-month small { color: var(--muted); display: block; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .active-month strong { align-items: center; display: flex; font-size: 1.05rem; gap: 9px; margin-top: 5px; }
+    .month-dot { border-radius: 999px; display: inline-block; height: 12px; width: 12px; }
+
+    .pin-wrap { animation: markerPop .55s both cubic-bezier(.2, .9, .2, 1.2); filter: drop-shadow(0 12px 18px rgba(0,0,0,.45)); }
+    .pin-svg { overflow: visible; }
+    .pin-number { fill: #fff; font-size: 13px; font-weight: 900; text-anchor: middle; dominant-baseline: middle; }
+
+    .route-line {
+      animation: routeDash 16s linear infinite;
+      filter: drop-shadow(0 0 8px rgba(255,255,255,.34));
+      stroke-dasharray: 14 13;
+    }
+
+    .popup h3 { font-size: 1rem; line-height: 1.25; margin: 0 0 10px; }
+    .popup .meta { color: var(--soft); display: grid; font-size: .86rem; gap: 6px; }
+    .popup .next { border-top: 1px solid rgba(255,255,255,.10); color: #fbbf24; font-weight: 800; margin-top: 12px; padding-top: 10px; }
+
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      min-height: 720px;
+      max-height: 820px;
+    }
+
+    .panel-head {
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      padding: 18px;
+    }
+
+    .search-wrap { position: relative; }
+    .search-wrap input {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      color: #fff;
+      font: inherit;
+      outline: 0;
+      padding: 13px 14px 13px 42px;
+      width: 100%;
+    }
+    .search-wrap input:focus { border-color: rgba(56,189,248,.75); box-shadow: 0 0 0 4px rgba(56,189,248,.12); }
+    .search-wrap span { left: 14px; position: absolute; top: 12px; }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 13px;
+    }
+
+    .month-filter {
+      background: rgba(255,255,255,.065);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 999px;
+      color: var(--soft);
+      font-size: .78rem;
+      font-weight: 800;
+      padding: 8px 10px;
+      transition: .18s ease;
+    }
+    .month-filter:hover, .month-filter.active { background: var(--month-color, #38bdf8); border-color: transparent; color: #fff; transform: translateY(-1px); }
+
+    .visible-counter { color: var(--muted); font-size: .83rem; font-weight: 700; margin-top: 12px; }
+
+    .stats-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, 1fr);
+      margin-top: 14px;
+    }
+
+    .stat {
+      background: rgba(255,255,255,.065);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 18px;
+      padding: 13px;
+    }
+    .stat b { display: block; font-size: 1.15rem; letter-spacing: -.03em; }
+    .stat span { color: var(--muted); display: block; font-size: .74rem; font-weight: 700; margin-top: 3px; }
+
+    .next-event {
+      background: linear-gradient(135deg, rgba(56,189,248,.14), rgba(139,92,246,.13));
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      margin-top: 12px;
+      padding: 13px;
+    }
+    .next-event small { color: var(--muted); display: block; font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .next-event strong { display: block; font-size: .95rem; line-height: 1.3; margin-top: 6px; }
+    .next-event span { color: var(--soft); display: block; font-size: .82rem; margin-top: 4px; }
+
+    .event-list {
+      display: grid;
+      gap: 12px;
+      overflow: auto;
+      padding: 16px 18px 20px;
+      scrollbar-color: rgba(255,255,255,.25) transparent;
+    }
+
+    .event-card {
+      background: rgba(255,255,255,.055);
+      border: 1px solid rgba(255,255,255,.10);
+      border-left: 4px solid var(--event-color);
+      border-radius: 18px;
+      cursor: pointer;
+      display: grid;
+      gap: 9px;
+      padding: 14px;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+    .event-card:hover, .event-card.active {
+      background: rgba(255,255,255,.095);
+      border-color: color-mix(in srgb, var(--event-color), white 20%);
+      box-shadow: 0 14px 35px rgba(0,0,0,.22);
+      transform: translateY(-2px);
+    }
+
+    .card-top { align-items: flex-start; display: flex; gap: 12px; }
+    .event-num { align-items: center; background: var(--event-color); border-radius: 13px; color: #fff; display: inline-flex; flex: 0 0 34px; font-size: .9rem; font-weight: 900; height: 34px; justify-content: center; }
+    .event-title { font-size: .96rem; font-weight: 900; line-height: 1.25; margin: 0; }
+    .event-city { color: var(--soft); font-size: .86rem; font-weight: 700; margin-top: 4px; }
+    .event-meta { color: var(--muted); display: grid; font-size: .8rem; gap: 5px; line-height: 1.35; }
+    .event-meta b { color: var(--soft); }
+
+    .empty { color: var(--muted); padding: 20px; text-align: center; }
+
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,.7); } 70% { box-shadow: 0 0 0 12px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+    @keyframes floatBadge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    @keyframes markerPop { from { opacity: 0; transform: translateY(18px) scale(.6); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes routeDash { to { stroke-dashoffset: -540; } }
+
+    @media (max-width: 980px) {
+      .hero { flex-direction: column; }
+      .hero-actions { align-items: stretch; flex-direction: row; min-width: 0; width: 100%; }
+      .total-distance { flex: 1; text-align: left; }
+      .shell { grid-template-columns: 1fr; }
+      .map-card { min-height: 58vh; }
+      #map { min-height: 58vh; }
+      .side-panel { border-radius: 26px 26px 0 0; bottom: 0; left: 0; max-height: 58vh; min-height: 0; position: fixed; right: 0; transform: translateY(calc(100% - 118px)); transition: transform .28s ease; z-index: 1200; }
+      .side-panel.open, .side-panel:focus-within { transform: translateY(0); }
+      .side-panel::before { background: rgba(255,255,255,.35); border-radius: 99px; content: ""; height: 4px; left: 50%; position: absolute; top: 10px; transform: translateX(-50%); width: 52px; }
+      .panel-head { padding-top: 26px; }
+      .stats-grid { grid-template-columns: repeat(4, minmax(92px, 1fr)); overflow-x: auto; }
+      .stat { min-width: 96px; }
+    }
+
+    @media (max-width: 640px) {
+      .app { padding: 14px; }
+      .hero-actions { flex-direction: column; }
+      .map-tools { flex-wrap: wrap; left: 24px; right: 78px; top: 24px; }
+      .tool-btn { padding: 10px 11px; }
+      .active-month { bottom: 24px; left: 24px; right: auto; }
+    }
+
+    @media print {
+      body { background: #fff; color: #111827; }
+      .hero-actions, .map-tools, .zoom-control, .filters, .search-wrap, .active-month { display: none !important; }
+      .app { padding: 0; }
+      .shell { display: block; }
+      .map-card, .side-panel { border: 1px solid #ddd; box-shadow: none; max-height: none; min-height: 0; page-break-inside: avoid; }
+      .side-panel { margin-top: 16px; position: static; transform: none; }
+      .event-list { max-height: none; overflow: visible; }
+    }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Mapa de eventos em Santa Catarina</h1>
-    <p>Redirecionando para o mapa interativo...</p>
-    <p><a href="santa_catarina_eventos_2026.html">Clique aqui se o mapa não abrir automaticamente.</a></p>
-  </main>
+  <div class="app">
+    <header class="hero">
+      <div>
+        <div class="eyebrow"><span class="pulse-dot"></span> Santa Catarina · Brasil · 2026</div>
+        <h1>Rota dos Clássicos — SC 2026</h1>
+        <p class="subtitle">Mapa interativo dos encontros de veículos antigos em ordem cronológica, com filtros por mês, busca, rota animada e detalhes de cada evento.</p>
+      </div>
+      <div class="hero-actions">
+        <div class="badge"><span>✦</span><span>23 Eventos</span></div>
+        <div class="total-distance"><strong id="totalDistanceHero">— km</strong><span>distância total da rota</span></div>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="map-card">
+        <div id="map" aria-label="Mapa dos eventos de veículos antigos em Santa Catarina"></div>
+        <div class="map-tools">
+          <button class="tool-btn" id="followRoute">▶ Seguir rota</button>
+          <button class="tool-btn" id="shareBtn">↗ Compartilhar</button>
+          <button class="tool-btn" id="printBtn">⤓ Exportar PDF</button>
+        </div>
+        <div class="zoom-control" aria-label="Controles de zoom">
+          <button class="zoom-btn" id="zoomIn" aria-label="Aproximar">+</button>
+          <button class="zoom-btn" id="zoomOut" aria-label="Afastar">−</button>
+        </div>
+        <div class="active-month" id="activeMonthBox">
+          <small>Mês ativo</small>
+          <strong><span class="month-dot" id="activeMonthDot"></span><span id="activeMonthText">Todos</span></strong>
+        </div>
+      </section>
+
+      <aside class="side-panel" id="sidePanel">
+        <div class="panel-head">
+          <div class="search-wrap">
+            <span>⌕</span>
+            <input id="searchInput" type="search" placeholder="Buscar por cidade ou evento" autocomplete="off" />
+          </div>
+          <div class="filters" id="filters"></div>
+          <div class="visible-counter" id="visibleCounter"></div>
+          <div class="stats-grid">
+            <div class="stat"><b id="statEvents">23</b><span>Total de eventos</span></div>
+            <div class="stat"><b id="statDistance">—</b><span>Distância total</span></div>
+            <div class="stat"><b id="statMonths">7</b><span>Meses cobertos</span></div>
+            <div class="stat"><b id="statCity">—</b><span>Cidade destaque</span></div>
+          </div>
+          <div class="next-event" id="nextEvent"></div>
+        </div>
+        <div class="event-list" id="eventList"></div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    const events = [
+      { id:1, name:"V Rally de Flonópsh", city:"Florianópolis", date:"20/06/2026", contact:"Célio Vieira — 48 9145-3377", lat:-27.5954, lon:-48.5480 },
+      { id:2, name:"21º Encontro Veículos Antigos", city:"São Bento do Sul", date:"03/07/2026", contact:"Mauro Scatolon — 47 9986-4060", lat:-26.2500, lon:-49.3800 },
+      { id:3, name:"XIV Santa Catarina Custom Show", city:"Balneário Camboriú", date:"10/07/2026", contact:"Rodrigo — 47 8480-8712", lat:-26.9906, lon:-48.6348 },
+      { id:4, name:"Auto's Memories Days 3ª ed.", city:"Blumenau", date:"25/07/2026", contact:"Luciano Eccel — 47 9164-3106", lat:-26.9195, lon:-49.0661 },
+      { id:5, name:"11º Encontro Carros Antigos", city:"Rancho Queimado", date:"27/07/2026", contact:"Jakson — 48 8480-8712", lat:-27.6500, lon:-49.0000 },
+      { id:6, name:"2º Encontro Veículos Antigos e Clássicos", city:"Lages", date:"01/08/2026", contact:"Sérgio Fontana — 49 9983-0570", lat:-27.8158, lon:-50.3258 },
+      { id:7, name:"6º Encontro Carro Antigo", city:"Pinhalzinho", date:"14/08/2026", contact:"Ricardo — 49 8816-6465", lat:-26.8500, lon:-52.9900 },
+      { id:8, name:"3º Encontro Antigos e Amigos", city:"Tijucas", date:"15/08/2026", contact:"Moishés — 48 9948-9644", lat:-27.2400, lon:-48.6300 },
+      { id:9, name:"5ª Exposição Veículos Antigos", city:"Orleans", date:"16/08/2026", contact:"Roberto — 48 9118-9353", lat:-28.3600, lon:-49.2900 },
+      { id:10, name:"4ª Edição Dia Nacional da Kombi", city:"Joinville", date:"29/08/2026", contact:"@dnk_joinville", lat:-26.3044, lon:-48.8487 },
+      { id:11, name:"10º Encontro Veículos Antigos", city:"Jaraguá do Sul", date:"04/09/2026", contact:"Marlon — 47 9667-0589", lat:-26.4900, lon:-49.0700 },
+      { id:12, name:"9º Encontro Antigos e Campistas", city:"Tubarão", date:"12/09/2026", contact:"Ademir — 48 99956-9391", lat:-28.4700, lon:-49.0100 },
+      { id:13, name:"8º Encontro Os Caravelhos", city:"Anchieta", date:"17/10/2026", contact:"Vereador Binho — 49 9941-0170", lat:-26.5300, lon:-53.3400 },
+      { id:14, name:"16ª Edição VOLKSKUQUE", city:"Rio Negrinho", date:"05/11/2026", contact:"41 9514-7984", lat:-26.2500, lon:-49.5200 },
+      { id:15, name:"2º Encontro Antigos da Neve", city:"São Joaquim", date:"08/11/2026", contact:"João Paulo — 49 9135-0324", lat:-28.2900, lon:-49.9300 },
+      { id:16, name:"Encontro Antigos de Pouso Redondo", city:"Pouso Redondo", date:"08/11/2026", contact:"Romão — 47 9213-1431", lat:-27.2500, lon:-49.9500 },
+      { id:17, name:"6º Encontro Carros Antigos da Zimba", city:"Imbituba", date:"15/11/2026", contact:"Luciano — 48 9623-8680", lat:-28.2300, lon:-48.6700 },
+      { id:18, name:"Praia dos Clássicos", city:"Itajaí", date:"17/11/2026", contact:"Romão — 47 9213-1431", lat:-26.9100, lon:-48.6600 },
+      { id:19, name:"5º Natal dos Antigos", city:"Videira", date:"21/11/2026", contact:"Alison — 49 9995-5781", lat:-27.0000, lon:-51.1600 },
+      { id:20, name:"5º Encontro Carros Antigos de Angelina", city:"Angelina", date:"29/11/2026", contact:"49 9801-7359", lat:-27.5500, lon:-49.1700 },
+      { id:21, name:"8º Encontro Orquidário do Irá", city:"Ilhota", date:"30/11/2026", contact:"Osiel — 47 9950-1382", lat:-26.9000, lon:-48.8200 },
+      { id:22, name:"19ª Edição Volks Friends", city:"Pomerode", date:"03/12/2026", contact:"Jean — 47 98408-1082", lat:-26.7400, lon:-49.1800 },
+      { id:23, name:"7º Encontro Carros Antigos & 6º Opala Riomafra", city:"Mafra", date:"13/12/2026", contact:"edersacomori@outlook.com.br", lat:-26.1100, lon:-49.8000 }
+    ];
+
+    const monthInfo = {
+      6: { key: "jun", label: "Jun", name: "Junho", color: "#3B82F6" },
+      7: { key: "jul", label: "Jul", name: "Julho", color: "#10B981" },
+      8: { key: "ago", label: "Ago", name: "Agosto", color: "#F59E0B" },
+      9: { key: "set", label: "Set", name: "Setembro", color: "#EF4444" },
+      10: { key: "out", label: "Out", name: "Outubro", color: "#EC4899" },
+      11: { key: "nov", label: "Nov", name: "Novembro", color: "#8B5CF6" },
+      12: { key: "dez", label: "Dez", name: "Dezembro", color: "#6B7280" }
+    };
+
+    const parseDate = value => {
+      const [day, month, year] = value.split("/").map(Number);
+      return new Date(year, month - 1, day, 12);
+    };
+
+    const haversine = (a, b) => {
+      const R = 6371;
+      const toRad = deg => deg * Math.PI / 180;
+      const dLat = toRad(b.lat - a.lat);
+      const dLon = toRad(b.lon - a.lon);
+      const lat1 = toRad(a.lat);
+      const lat2 = toRad(b.lat);
+      const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+      return 2 * R * Math.asin(Math.sqrt(h));
+    };
+
+    const formatKm = value => `${Math.round(value).toLocaleString("pt-BR")} km`;
+    const normalize = value => value.toLocaleLowerCase("pt-BR").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    const preparedEvents = events
+      .map(event => ({ ...event, dateObj: parseDate(event.date) }))
+      .sort((a, b) => a.dateObj - b.dateObj || a.id - b.id)
+      .map((event, index, list) => {
+        const month = event.dateObj.getMonth() + 1;
+        const prev = index > 0 ? list[index - 1] : null;
+        const next = index < list.length - 1 ? list[index + 1] : null;
+        return {
+          ...event,
+          order: index + 1,
+          month,
+          monthKey: monthInfo[month].key,
+          monthLabel: monthInfo[month].label,
+          monthName: monthInfo[month].name,
+          color: monthInfo[month].color,
+          legKm: prev ? haversine(prev, event) : 0,
+          nextKm: next ? haversine(event, next) : 0
+        };
+      });
+
+    preparedEvents.forEach((event, index) => {
+      event.totalKm = preparedEvents.slice(0, index + 1).reduce((sum, item) => sum + item.legKm, 0);
+    });
+
+    const totalKm = preparedEvents.reduce((sum, event) => sum + event.legKm, 0);
+    const citiesCount = preparedEvents.reduce((acc, event) => ({ ...acc, [event.city]: (acc[event.city] || 0) + 1 }), {});
+    const maxCityCount = Math.max(...Object.values(citiesCount));
+    const topCities = Object.entries(citiesCount).filter(([, count]) => count === maxCityCount).map(([city]) => city);
+    const cityStat = topCities.length === 1 ? `${topCities[0]} (${maxCityCount})` : `Empate (${maxCityCount})`;
+
+    let activeMonth = localStorage.getItem("classicRouteMonth") || "all";
+    let searchTerm = "";
+    let activeEventId = null;
+    let followTimer = null;
+
+    const map = L.map("map", { zoomControl: false, scrollWheelZoom: true }).setView([-27.35, -50.2], 7);
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      attribution: "&copy; OpenStreetMap &copy; CARTO",
+      subdomains: "abcd",
+      maxZoom: 19
+    }).addTo(map);
+
+    const routeLine = L.polyline(preparedEvents.map(event => [event.lat, event.lon]), {
+      color: "#f8fafc",
+      weight: 4,
+      opacity: .82,
+      className: "route-line"
+    }).addTo(map);
+
+    const markers = new Map();
+    const markerLayer = L.featureGroup().addTo(map);
+
+    const pinIcon = event => L.divIcon({
+      className: "",
+      html: `<div class="pin-wrap" style="animation-delay:${event.order * 50}ms"><svg class="pin-svg" width="44" height="54" viewBox="0 0 44 54"><path d="M22 52s18-16.5 18-31A18 18 0 1 0 4 21c0 14.5 18 31 18 31Z" fill="${event.color}"/><circle cx="22" cy="21" r="12.5" fill="rgba(15,17,23,.86)"/><text class="pin-number" x="22" y="21">${event.order}</text></svg></div>`,
+      iconSize: [44, 54],
+      iconAnchor: [22, 52],
+      popupAnchor: [0, -48]
+    });
+
+    const popupHtml = event => `<div class="popup"><h3>${event.name}</h3><div class="meta"><span><b>Cidade:</b> ${event.city}</span><span><b>Data:</b> ${event.date}</span><span><b>Contato:</b> ${event.contact}</span><span><b>Mês:</b> ${event.monthName}</span></div><div class="next">${event.nextKm ? `Próximo trecho: ${formatKm(event.nextKm)}` : "Último evento da rota"}</div></div>`;
+
+    preparedEvents.forEach(event => {
+      const marker = L.marker([event.lat, event.lon], { icon: pinIcon(event), title: event.name })
+        .bindPopup(popupHtml(event))
+        .bindTooltip(`${event.name}<br>${event.date}`, { direction: "top", sticky: true })
+        .on("click", () => setActiveEvent(event.id, true));
+      marker.addTo(markerLayer);
+      markers.set(event.id, marker);
+    });
+
+    map.fitBounds(markerLayer.getBounds().pad(.12));
+    setTimeout(() => map.invalidateSize(), 120);
+
+    const els = {
+      totalDistanceHero: document.getElementById("totalDistanceHero"),
+      statEvents: document.getElementById("statEvents"),
+      statDistance: document.getElementById("statDistance"),
+      statMonths: document.getElementById("statMonths"),
+      statCity: document.getElementById("statCity"),
+      nextEvent: document.getElementById("nextEvent"),
+      filters: document.getElementById("filters"),
+      visibleCounter: document.getElementById("visibleCounter"),
+      searchInput: document.getElementById("searchInput"),
+      eventList: document.getElementById("eventList"),
+      activeMonthDot: document.getElementById("activeMonthDot"),
+      activeMonthText: document.getElementById("activeMonthText"),
+      sidePanel: document.getElementById("sidePanel")
+    };
+
+    const setStats = () => {
+      els.totalDistanceHero.textContent = formatKm(totalKm);
+      els.statEvents.textContent = preparedEvents.length;
+      els.statDistance.textContent = formatKm(totalKm);
+      els.statMonths.textContent = new Set(preparedEvents.map(event => event.month)).size;
+      els.statCity.textContent = cityStat;
+    };
+
+    const setCountdown = () => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const next = preparedEvents.find(event => event.dateObj >= today);
+      if (!next) {
+        els.nextEvent.innerHTML = `<small>Próximo evento</small><strong>Temporada encerrada</strong><span>Todos os eventos de 2026 já passaram.</span>`;
+        return;
+      }
+      const days = Math.max(0, Math.ceil((next.dateObj - today) / 86400000));
+      els.nextEvent.innerHTML = `<small>Próximo evento</small><strong>${next.name}</strong><span>${next.city} · ${next.date} · faltam ${days} dia${days === 1 ? "" : "s"}</span>`;
+    };
+
+    const makeFilters = () => {
+      const buttons = [{ key: "all", label: "Todos", color: "#38bdf8" }, ...Object.values(monthInfo).map(item => ({ key: item.key, label: item.label, color: item.color }))];
+      els.filters.innerHTML = buttons.map(item => `<button class="month-filter ${activeMonth === item.key ? "active" : ""}" style="--month-color:${item.color}" data-month="${item.key}">${item.label}</button>`).join("");
+      els.filters.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
+        activeMonth = button.dataset.month;
+        localStorage.setItem("classicRouteMonth", activeMonth);
+        render();
+      }));
+    };
+
+    const filteredEvents = () => preparedEvents.filter(event => {
+      const matchesMonth = activeMonth === "all" || event.monthKey === activeMonth;
+      const haystack = normalize(`${event.name} ${event.city} ${event.contact}`);
+      return matchesMonth && haystack.includes(normalize(searchTerm));
+    });
+
+    const setActiveMonthBox = () => {
+      const item = activeMonth === "all" ? { name: "Todos", color: "#38bdf8" } : Object.values(monthInfo).find(month => month.key === activeMonth);
+      els.activeMonthText.textContent = item.name;
+      els.activeMonthDot.style.background = item.color;
+    };
+
+    const updateMarkerVisibility = visible => {
+      const visibleIds = new Set(visible.map(event => event.id));
+      preparedEvents.forEach(event => {
+        const marker = markers.get(event.id);
+        const hasMarker = markerLayer.hasLayer(marker);
+        if (visibleIds.has(event.id) && !hasMarker) marker.addTo(markerLayer);
+        if (!visibleIds.has(event.id) && hasMarker) markerLayer.removeLayer(marker);
+      });
+    };
+
+    const renderCards = visible => {
+      if (!visible.length) {
+        els.eventList.innerHTML = `<div class="empty">Nenhum evento encontrado para o filtro atual.</div>`;
+        return;
+      }
+      els.eventList.innerHTML = visible.map(event => `<article class="event-card ${event.id === activeEventId ? "active" : ""}" data-id="${event.id}" style="--event-color:${event.color}"><div class="card-top"><span class="event-num">${event.order}</span><div><h3 class="event-title">${event.name}</h3><div class="event-city">${event.city} · ${event.monthName}</div></div></div><div class="event-meta"><span><b>Data:</b> ${event.date}</span><span><b>Contato:</b> ${event.contact}</span><span><b>Distância do trecho:</b> ${formatKm(event.legKm)}</span></div></article>`).join("");
+      els.eventList.querySelectorAll(".event-card").forEach(card => {
+        card.addEventListener("mouseenter", () => setActiveEvent(Number(card.dataset.id), false));
+        card.addEventListener("click", () => setActiveEvent(Number(card.dataset.id), true));
+      });
+    };
+
+    const render = () => {
+      makeFilters();
+      const visible = filteredEvents();
+      els.visibleCounter.textContent = `${visible.length} evento${visible.length === 1 ? "" : "s"} visível${visible.length === 1 ? "" : "is"}`;
+      setActiveMonthBox();
+      updateMarkerVisibility(visible);
+      renderCards(visible);
+      if (visible.length) map.fitBounds(L.featureGroup(visible.map(event => markers.get(event.id))).getBounds().pad(.2));
+    };
+
+    const setActiveEvent = (id, openPopup) => {
+      activeEventId = id;
+      const event = preparedEvents.find(item => item.id === id);
+      const marker = markers.get(id);
+      document.querySelectorAll(".event-card").forEach(card => card.classList.toggle("active", Number(card.dataset.id) === id));
+      if (event) {
+        els.activeMonthText.textContent = event.monthName;
+        els.activeMonthDot.style.background = event.color;
+      }
+      if (openPopup && marker) {
+        map.flyTo([event.lat, event.lon], Math.max(map.getZoom(), 9), { duration: .85 });
+        setTimeout(() => marker.openPopup(), 520);
+        history.replaceState(null, "", `${location.pathname}?evento=${id}`);
+        els.sidePanel.classList.add("open");
+      }
+    };
+
+    const followRoute = () => {
+      clearInterval(followTimer);
+      let index = 0;
+      const step = () => {
+        const event = preparedEvents[index];
+        setActiveEvent(event.id, true);
+        index += 1;
+        if (index >= preparedEvents.length) clearInterval(followTimer);
+      };
+      step();
+      followTimer = setInterval(step, 1500);
+    };
+
+    const share = async () => {
+      const id = activeEventId || preparedEvents[0].id;
+      const url = `${location.origin}${location.pathname}?evento=${id}`;
+      try {
+        await navigator.clipboard.writeText(url);
+        document.getElementById("shareBtn").textContent = "✓ Link copiado";
+        setTimeout(() => document.getElementById("shareBtn").textContent = "↗ Compartilhar", 1600);
+      } catch {
+        prompt("Copie o link", url);
+      }
+    };
+
+    els.searchInput.addEventListener("input", event => {
+      searchTerm = event.target.value;
+      render();
+    });
+    document.getElementById("followRoute").addEventListener("click", followRoute);
+    document.getElementById("shareBtn").addEventListener("click", share);
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+    document.getElementById("zoomIn").addEventListener("click", () => map.zoomIn());
+    document.getElementById("zoomOut").addEventListener("click", () => map.zoomOut());
+
+    setStats();
+    setCountdown();
+    render();
+
+    const params = new URLSearchParams(location.search);
+    const directId = Number(params.get("evento"));
+    if (directId && markers.has(directId)) setTimeout(() => setActiveEvent(directId, true), 650);
+  </script>
 </body>
 </html>
