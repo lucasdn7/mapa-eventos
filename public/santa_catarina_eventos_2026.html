@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Eventos de Veículos Antigos em Santa Catarina — 2026</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQkDWCi5AG4OmoIt1m0aUSp+3sA3E7s=" crossorigin="" />
+  <style>
+    :root { --bg: #07111f; --panel: #0f1d33; --line: #ffb703; --pin: #e63946; --text: #f8fafc; --muted: #b6c2d2; --sc: #10b981; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: radial-gradient(circle at top, #17324d 0, var(--bg) 58%); color: var(--text); }
+    header { padding: 32px clamp(18px, 4vw, 54px) 18px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 4vw, 3.2rem); line-height: 1.05; }
+    header p { margin: 0; color: var(--muted); max-width: 1080px; }
+    main { display: grid; grid-template-columns: minmax(320px, 1.8fr) minmax(300px, .9fr); gap: 22px; padding: 14px clamp(18px, 4vw, 54px) 42px; }
+    .card { background: color-mix(in srgb, var(--panel) 88%, transparent); border: 1px solid rgba(255,255,255,.11); border-radius: 24px; box-shadow: 0 20px 80px rgba(0,0,0,.28); overflow: hidden; }
+    .map-wrap { padding: 18px; }
+    #map { width: 100%; min-height: 720px; border-radius: 18px; background: #dbeafe; }
+    .leaflet-popup-content-wrapper { border-radius: 14px; }
+    .leaflet-popup-content { min-width: 250px; font-family: Inter, system-ui, sans-serif; line-height: 1.42; }
+    .leaflet-popup-content strong { display: block; font-size: 1rem; margin-bottom: 6px; color: #0f172a; }
+    .leaflet-popup-content span { display: block; color: #334155; margin-top: 3px; }
+    .event-marker { align-items: center; background: var(--pin); border: 3px solid #fff; border-radius: 999px; box-shadow: 0 6px 16px rgba(0,0,0,.35); color: #fff; display: flex; font-weight: 900; height: 30px; justify-content: center; width: 30px; }
+    aside { padding: 18px; }
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .stat { padding: 14px; background: rgba(255,255,255,.06); border-radius: 16px; }
+    .stat b { display: block; font-size: 1.4rem; color: #fff; }
+    .stat small { color: var(--muted); }
+    .table-wrap { max-height: 650px; overflow: auto; border-radius: 16px; border: 1px solid rgba(255,255,255,.08); }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th, td { padding: 10px 11px; border-bottom: 1px solid rgba(255,255,255,.08); vertical-align: top; }
+    th { position: sticky; top: 0; background: #122238; text-align: left; color: #fff; }
+    td { color: var(--muted); }
+    td:nth-child(1), td:nth-child(5), td:nth-child(6) { color: #fff; font-weight: 700; }
+    footer { color: var(--muted); padding: 0 clamp(18px, 4vw, 54px) 38px; font-size: .9rem; }
+    @media (max-width: 980px) { main { grid-template-columns: 1fr; } #map { min-height: 560px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Rota cronológica de eventos em Santa Catarina — 2026</h1>
+    <p>Mapa cartográfico do Estado de Santa Catarina, Brasil, com rota ligada pela data dos eventos. Passe o mouse ou clique nos marcadores numerados para ver evento, cidade, data, contato, coordenadas e distância do trecho.</p>
+  </header>
+  <main>
+    <section class="card map-wrap" aria-label="Mapa cartográfico dos eventos em Santa Catarina">
+      <div id="map"></div>
+    </section>
+    <aside class="card">
+      <div class="stats">
+        <div class="stat"><b>23</b><small>eventos em ordem de data</small></div>
+        <div class="stat"><b>4076.0 km</b><small>rota cronológica aproximada</small></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Evento</th><th>Cidade</th><th>Data</th><th>km trecho</th><th>km total</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>V Rally de Floripa</td><td>Florianópolis</td><td>20 de junho de 2026</td><td>0.0</td><td>0.0</td></tr>
+<tr><td>2</td><td>21º Encontro de Veículos Antigos de São Bento do Sul</td><td>São Bento do Sul</td><td>3, 4 e 5 de julho de 2026</td><td>170.7</td><td>170.7</td></tr>
+<tr><td>3</td><td>XIV Santa Catarina Custom Show</td><td>Balneário Camboriú</td><td>10, 11 e 12 de julho de 2026</td><td>110.6</td><td>281.3</td></tr>
+<tr><td>4</td><td>Auto&#x27;s Memories Days — 3ª edição</td><td>Blumenau</td><td>25 e 26 de julho de 2026</td><td>44.0</td><td>325.3</td></tr>
+<tr><td>5</td><td>11º Encontro de Carros Antigos de Rancho Queimado</td><td>Rancho Queimado</td><td>27 de julho de 2026</td><td>84.4</td><td>409.6</td></tr>
+<tr><td>6</td><td>2º Encontro de Veículos Antigos e Clássicos de Lages</td><td>Lages</td><td>1 e 2 de agosto de 2026</td><td>129.6</td><td>539.2</td></tr>
+<tr><td>7</td><td>6º Encontro de Carro Antigo de Pinhalzinho</td><td>Pinhalzinho</td><td>14, 15 e 16 de agosto de 2026</td><td>284.3</td><td>823.6</td></tr>
+<tr><td>8</td><td>3º Encontro Antigos e Amigos</td><td>Tijucas</td><td>15 e 16 de agosto de 2026</td><td>433.8</td><td>1257.4</td></tr>
+<tr><td>9</td><td>5ª Exposição de Veículos Antigos de Orleans</td><td>Orleans</td><td>16 de agosto de 2026</td><td>140.1</td><td>1397.5</td></tr>
+<tr><td>10</td><td>4ª Edição do Dia Nacional da Kombi</td><td>Joinville</td><td>29 de agosto de 2026</td><td>232.6</td><td>1630.1</td></tr>
+<tr><td>11</td><td>10º Encontro de Veículos Antigos de Jaraguá do Sul</td><td>Jaraguá do Sul</td><td>4, 5 e 6 de setembro de 2026</td><td>29.5</td><td>1659.6</td></tr>
+<tr><td>12</td><td>9º Encontro de Antigos e Campistas</td><td>Tubarão</td><td>12 e 13 de setembro de 2026</td><td>220.9</td><td>1880.6</td></tr>
+<tr><td>13</td><td>8º Encontro de Carros Antigos Os Caravelhos</td><td>Anchieta</td><td>17 e 18 de outubro de 2026</td><td>476.9</td><td>2357.5</td></tr>
+<tr><td>14</td><td>16ª Edição VOLKSKUQUE</td><td>Rio Negrinho</td><td>5, 6, 7 e 8 de novembro de 2026</td><td>381.2</td><td>2738.7</td></tr>
+<tr><td>15</td><td>2º Encontro Antigos da Neve</td><td>São Joaquim</td><td>8 de novembro de 2026</td><td>230.4</td><td>2969.1</td></tr>
+<tr><td>16</td><td>Encontro de Antigos de Pouso Redondo</td><td>Pouso Redondo</td><td>8 de novembro de 2026</td><td>115.1</td><td>3084.2</td></tr>
+<tr><td>17</td><td>6º Encontro de Carros Antigos da Zimba</td><td>Imbituba</td><td>15 de novembro de 2026</td><td>165.4</td><td>3249.7</td></tr>
+<tr><td>18</td><td>Praia dos Clássicos</td><td>Itajaí</td><td>17 de novembro de 2026</td><td>147.9</td><td>3397.6</td></tr>
+<tr><td>19</td><td>5º Natal dos Antigos</td><td>Videira</td><td>21 e 22 de novembro de 2026</td><td>246.4</td><td>3644.0</td></tr>
+<tr><td>20</td><td>5º Encontro de Carros Antigos de Angelina</td><td>Angelina</td><td>29 de novembro de 2026</td><td>223.0</td><td>3867.0</td></tr>
+<tr><td>21</td><td>8º Encontro de Carros Antigos Orquidário do Irá</td><td>Ilhota</td><td>30 de novembro de 2026</td><td>75.9</td><td>3942.9</td></tr>
+<tr><td>22</td><td>19ª Edição Volks Friends — Encontro de Fuscas e Derivados</td><td>Pomerode</td><td>3 a 6 de dezembro de 2026</td><td>39.3</td><td>3982.2</td></tr>
+<tr><td>23</td><td>7º Encontro de Carros Antigos e 6º Opala Riomafra</td><td>Mafra</td><td>13 de dezembro de 2026</td><td>93.9</td><td>4076.0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </aside>
+  </main>
+  <footer>
+    Coordenadas representam o centro/município informado para cada evento, pois a lista não trouxe endereço de venue. A rota segue a ordem cronológica dos eventos e usa distância geodésica aproximada entre os municípios.
+  </footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    const events = [{"route_order": 1, "evento": "V Rally de Floripa", "cidade": "Florianópolis", "data": "20 de junho de 2026", "contato": "Célio Vieira — 48 9145-3377", "latitude": -27.5949, "longitude": -48.5482, "route_leg_km": 0.0, "route_total_km": 0.0, "start_date_iso": "2026-06-20"}, {"route_order": 2, "evento": "21º Encontro de Veículos Antigos de São Bento do Sul", "cidade": "São Bento do Sul", "data": "3, 4 e 5 de julho de 2026", "contato": "Mauro Scatolon — 47 9986-4060", "latitude": -26.2505, "longitude": -49.3786, "route_leg_km": 170.7, "route_total_km": 170.7, "start_date_iso": "2026-07-03"}, {"route_order": 3, "evento": "XIV Santa Catarina Custom Show", "cidade": "Balneário Camboriú", "data": "10, 11 e 12 de julho de 2026", "contato": "Rodrigo — 47 8480-8712", "latitude": -26.9906, "longitude": -48.6352, "route_leg_km": 110.6, "route_total_km": 281.3, "start_date_iso": "2026-07-10"}, {"route_order": 4, "evento": "Auto's Memories Days — 3ª edição", "cidade": "Blumenau", "data": "25 e 26 de julho de 2026", "contato": "Luciano Eccel — 47 9164-3106", "latitude": -26.9155, "longitude": -49.0709, "route_leg_km": 44.0, "route_total_km": 325.3, "start_date_iso": "2026-07-25"}, {"route_order": 5, "evento": "11º Encontro de Carros Antigos de Rancho Queimado", "cidade": "Rancho Queimado", "data": "27 de julho de 2026", "contato": "Jakson — 48 8480-8712", "latitude": -27.6727, "longitude": -49.0191, "route_leg_km": 84.4, "route_total_km": 409.6, "start_date_iso": "2026-07-27"}, {"route_order": 6, "evento": "2º Encontro de Veículos Antigos e Clássicos de Lages", "cidade": "Lages", "data": "1 e 2 de agosto de 2026", "contato": "Sérgio Fontana — 49 9983-0570", "latitude": -27.8161, "longitude": -50.3265, "route_leg_km": 129.6, "route_total_km": 539.2, "start_date_iso": "2026-08-01"}, {"route_order": 7, "evento": "6º Encontro de Carro Antigo de Pinhalzinho", "cidade": "Pinhalzinho", "data": "14, 15 e 16 de agosto de 2026", "contato": "Ricardo — 49 8816-6465", "latitude": -26.8495, "longitude": -52.9916, "route_leg_km": 284.3, "route_total_km": 823.6, "start_date_iso": "2026-08-14"}, {"route_order": 8, "evento": "3º Encontro Antigos e Amigos", "cidade": "Tijucas", "data": "15 e 16 de agosto de 2026", "contato": "Moishés — 48 9948-9644", "latitude": -27.2411, "longitude": -48.6336, "route_leg_km": 433.8, "route_total_km": 1257.4, "start_date_iso": "2026-08-15"}, {"route_order": 9, "evento": "5ª Exposição de Veículos Antigos de Orleans", "cidade": "Orleans", "data": "16 de agosto de 2026", "contato": "Roberto — 48 9118-9353", "latitude": -28.3589, "longitude": -49.2917, "route_leg_km": 140.1, "route_total_km": 1397.5, "start_date_iso": "2026-08-16"}, {"route_order": 10, "evento": "4ª Edição do Dia Nacional da Kombi", "cidade": "Joinville", "data": "29 de agosto de 2026", "contato": "instagram.com/dnk_joinville/", "latitude": -26.3044, "longitude": -48.8487, "route_leg_km": 232.6, "route_total_km": 1630.1, "start_date_iso": "2026-08-29"}, {"route_order": 11, "evento": "10º Encontro de Veículos Antigos de Jaraguá do Sul", "cidade": "Jaraguá do Sul", "data": "4, 5 e 6 de setembro de 2026", "contato": "Marlon — 47 9667-0589", "latitude": -26.4851, "longitude": -49.0661, "route_leg_km": 29.5, "route_total_km": 1659.6, "start_date_iso": "2026-09-04"}, {"route_order": 12, "evento": "9º Encontro de Antigos e Campistas", "cidade": "Tubarão", "data": "12 e 13 de setembro de 2026", "contato": "Ademir — 48 99956-9391", "latitude": -28.4713, "longitude": -49.0144, "route_leg_km": 220.9, "route_total_km": 1880.6, "start_date_iso": "2026-09-12"}, {"route_order": 13, "evento": "8º Encontro de Carros Antigos Os Caravelhos", "cidade": "Anchieta", "data": "17 e 18 de outubro de 2026", "contato": "Vereador Binho — 49 9941-0170", "latitude": -26.5388, "longitude": -53.3319, "route_leg_km": 476.9, "route_total_km": 2357.5, "start_date_iso": "2026-10-17"}, {"route_order": 14, "evento": "16ª Edição VOLKSKUQUE", "cidade": "Rio Negrinho", "data": "5, 6, 7 e 8 de novembro de 2026", "contato": "41 9514-7984", "latitude": -26.2544, "longitude": -49.5175, "route_leg_km": 381.2, "route_total_km": 2738.7, "start_date_iso": "2026-11-05"}, {"route_order": 15, "evento": "2º Encontro Antigos da Neve", "cidade": "São Joaquim", "data": "8 de novembro de 2026", "contato": "João Paulo — 49 9135-0324", "latitude": -28.2939, "longitude": -49.9312, "route_leg_km": 230.4, "route_total_km": 2969.1, "start_date_iso": "2026-11-08"}, {"route_order": 16, "evento": "Encontro de Antigos de Pouso Redondo", "cidade": "Pouso Redondo", "data": "8 de novembro de 2026", "contato": "Romão — 47 9213-1431", "latitude": -27.2586, "longitude": -49.9339, "route_leg_km": 115.1, "route_total_km": 3084.2, "start_date_iso": "2026-11-08"}, {"route_order": 17, "evento": "6º Encontro de Carros Antigos da Zimba", "cidade": "Imbituba", "data": "15 de novembro de 2026", "contato": "Luciano — 48 9623-8680", "latitude": -28.24, "longitude": -48.6703, "route_leg_km": 165.4, "route_total_km": 3249.7, "start_date_iso": "2026-11-15"}, {"route_order": 18, "evento": "Praia dos Clássicos", "cidade": "Itajaí", "data": "17 de novembro de 2026", "contato": "Romão — 47 9213-1431", "latitude": -26.9101, "longitude": -48.6705, "route_leg_km": 147.9, "route_total_km": 3397.6, "start_date_iso": "2026-11-17"}, {"route_order": 19, "evento": "5º Natal dos Antigos", "cidade": "Videira", "data": "21 e 22 de novembro de 2026", "contato": "Alison — 49 9995-5781", "latitude": -27.0086, "longitude": -51.1543, "route_leg_km": 246.4, "route_total_km": 3644.0, "start_date_iso": "2026-11-21"}, {"route_order": 20, "evento": "5º Encontro de Carros Antigos de Angelina", "cidade": "Angelina", "data": "29 de novembro de 2026", "contato": "49 9801-7359", "latitude": -27.5695, "longitude": -48.9876, "route_leg_km": 223.0, "route_total_km": 3867.0, "start_date_iso": "2026-11-29"}, {"route_order": 21, "evento": "8º Encontro de Carros Antigos Orquidário do Irá", "cidade": "Ilhota", "data": "30 de novembro de 2026", "contato": "Osiel — 47 9950-1382", "latitude": -26.9023, "longitude": -48.8251, "route_leg_km": 75.9, "route_total_km": 3942.9, "start_date_iso": "2026-11-30"}, {"route_order": 22, "evento": "19ª Edição Volks Friends — Encontro de Fuscas e Derivados", "cidade": "Pomerode", "data": "3 a 6 de dezembro de 2026", "contato": "Jean — 47 98408-1082", "latitude": -26.7406, "longitude": -49.1769, "route_leg_km": 39.3, "route_total_km": 3982.2, "start_date_iso": "2026-12-03"}, {"route_order": 23, "evento": "7º Encontro de Carros Antigos e 6º Opala Riomafra", "cidade": "Mafra", "data": "13 de dezembro de 2026", "contato": "edersacomori@outlook.com.br", "latitude": -26.1115, "longitude": -49.8053, "route_leg_km": 93.9, "route_total_km": 4076.0, "start_date_iso": "2026-12-13"}];
+    const santaCatarina = {"type": "FeatureCollection", "name": "santa_catarina_simplificado", "features": [{"type": "Feature", "properties": {"name": "Santa Catarina", "uf": "SC", "source": "Contorno simplificado para visualização estática; substitua por malha oficial do IBGE no gerador GeoPandas quando houver rede."}, "geometry": {"type": "Polygon", "coordinates": [[[-53.84, -26.3], [-53.3, -25.95], [-52.3, -26.0], [-51.2, -25.98], [-50.0, -26.0], [-48.6, -25.96], [-48.36, -26.3], [-48.48, -27.0], [-48.35, -27.55], [-48.65, -28.1], [-49.4, -28.65], [-50.1, -28.85], [-51.2, -28.35], [-52.2, -27.8], [-53.0, -27.1], [-53.84, -26.65], [-53.84, -26.3]]]}}]};
+    const routeCoordinates = events.map((event) => [event.latitude, event.longitude]);
+    const map = L.map('map', { scrollWheelZoom: true }).setView([-27.35, -50.25], 7);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    const scLayer = L.geoJSON(santaCatarina, {
+      style: { color: '#047857', weight: 3, fillColor: '#10b981', fillOpacity: 0.13 }
+    }).addTo(map);
+
+    const route = L.polyline(routeCoordinates, {
+      color: '#f59e0b', weight: 5, opacity: 0.95, dashArray: '10, 10'
+    }).addTo(map);
+
+    const markerGroup = L.featureGroup().addTo(map);
+    events.forEach((event) => {
+      const icon = L.divIcon({
+        className: '',
+        html: `<div class="event-marker">${event.route_order}</div>`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+        popupAnchor: [0, -18]
+      });
+      L.marker([event.latitude, event.longitude], { icon })
+        .bindPopup(`<strong>${event.route_order}. ${event.evento}</strong><span><b>Cidade:</b> ${event.cidade}</span><span><b>Data:</b> ${event.data}</span><span><b>Contato:</b> ${event.contato}</span><span><b>Coordenadas:</b> ${event.latitude}, ${event.longitude}</span><span><b>Trecho anterior:</b> ${event.route_leg_km} km · <b>Acumulado:</b> ${event.route_total_km} km</span>`)
+        .bindTooltip(`${event.route_order}. ${event.evento}<br>${event.cidade} — ${event.data}`, { sticky: true, direction: 'top' })
+        .addTo(markerGroup);
+    });
+
+    map.fitBounds(L.featureGroup([scLayer, route, markerGroup]).getBounds().pad(0.08));
+  </script>
+</body>
+</html>
