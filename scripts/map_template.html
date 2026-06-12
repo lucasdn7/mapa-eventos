@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Eventos de Veículos Antigos em Santa Catarina — 2026</title>
+  <style>
+    :root { --bg: #07111f; --panel: #0f1d33; --line: #ffb703; --pin: #e63946; --text: #f8fafc; --muted: #b6c2d2; --map: #1b4965; --sc: #77c9a3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: radial-gradient(circle at top, #17324d 0, var(--bg) 58%); color: var(--text); }
+    header { padding: 32px clamp(18px, 4vw, 54px) 18px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 4vw, 3.2rem); line-height: 1.05; }
+    header p { margin: 0; color: var(--muted); max-width: 980px; }
+    main { display: grid; grid-template-columns: minmax(320px, 1.8fr) minmax(300px, .9fr); gap: 22px; padding: 14px clamp(18px, 4vw, 54px) 42px; }
+    .card { background: color-mix(in srgb, var(--panel) 88%, transparent); border: 1px solid rgba(255,255,255,.11); border-radius: 24px; box-shadow: 0 20px 80px rgba(0,0,0,.28); overflow: hidden; }
+    .map-wrap { padding: 18px; }
+    svg { width: 100%; height: auto; display: block; border-radius: 18px; background: linear-gradient(150deg, #08263d, #0e4263); }
+    .boundary { fill: rgba(119, 201, 163, .26); stroke: var(--sc); stroke-width: 3; filter: drop-shadow(0 8px 18px rgba(0,0,0,.35)); }
+    .route { fill: none; stroke: var(--line); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 9 10; filter: drop-shadow(0 2px 7px rgba(255,183,3,.45)); }
+    .marker circle { fill: var(--pin); stroke: #fff; stroke-width: 3; cursor: pointer; transition: transform .18s ease, fill .18s ease; transform-box: fill-box; transform-origin: center; }
+    .marker text { fill: #fff; font-size: 12px; font-weight: 800; pointer-events: none; }
+    .marker:hover circle, .marker:focus circle { fill: #fb8500; transform: scale(1.32); }
+    .tooltip { position: fixed; z-index: 10; width: min(340px, calc(100vw - 32px)); padding: 14px 16px; border-radius: 16px; background: rgba(3, 7, 18, .94); border: 1px solid rgba(255,255,255,.18); box-shadow: 0 18px 50px rgba(0,0,0,.45); pointer-events: none; opacity: 0; transform: translate(12px, 12px); transition: opacity .12s ease; }
+    .tooltip strong { display: block; font-size: 1rem; margin-bottom: 7px; color: #fff; }
+    .tooltip span { display: block; color: var(--muted); margin-top: 3px; }
+    aside { padding: 18px; }
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .stat { padding: 14px; background: rgba(255,255,255,.06); border-radius: 16px; }
+    .stat b { display: block; font-size: 1.4rem; color: #fff; }
+    .stat small { color: var(--muted); }
+    .table-wrap { max-height: 610px; overflow: auto; border-radius: 16px; border: 1px solid rgba(255,255,255,.08); }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th, td { padding: 10px 11px; border-bottom: 1px solid rgba(255,255,255,.08); vertical-align: top; }
+    th { position: sticky; top: 0; background: #122238; text-align: left; color: #fff; }
+    td { color: var(--muted); }
+    td:nth-child(1), td:nth-child(5), td:nth-child(6) { color: #fff; font-weight: 700; }
+    footer { color: var(--muted); padding: 0 clamp(18px, 4vw, 54px) 38px; font-size: .9rem; }
+    @media (max-width: 980px) { main { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Rota interativa de eventos em Santa Catarina — 2026</h1>
+    <p>Mapa filtrado para Santa Catarina, com marcadores nas cidades dos eventos. Passe o mouse ou navegue com Tab pelos pontos para ver evento, data, contato, coordenadas e distância do trecho.</p>
+  </header>
+  <main>
+    <section class="card map-wrap" aria-label="Mapa dos eventos em Santa Catarina">
+      <svg viewBox="0 0 1100 760" role="img" aria-labelledby="map-title map-desc">
+        <title id="map-title">Mapa interativo dos eventos de veículos antigos em Santa Catarina</title>
+        <desc id="map-desc">Os marcadores numerados seguem a rota por vizinho mais próximo, começando em Florianópolis.</desc>
+        <polygon class="boundary" points="{{boundary_points}}"></polygon>
+        <polyline class="route" points="{{route_points}}"></polyline>
+        {{markers}}
+      </svg>
+    </section>
+    <aside class="card">
+      <div class="stats">
+        <div class="stat"><b>{{event_count}}</b><small>eventos mapeados</small></div>
+        <div class="stat"><b>{{total_km}} km</b><small>rota aproximada</small></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Evento</th><th>Cidade</th><th>Data</th><th>km trecho</th><th>km total</th></tr></thead>
+          <tbody>
+            {{rows}}
+          </tbody>
+        </table>
+      </div>
+    </aside>
+  </main>
+  <footer>
+    Coordenadas representam o centro/município informado para cada evento, pois a lista não trouxe endereço de venue. A rota usa distância geodésica aproximada e heurística de vizinho mais próximo, partindo do primeiro evento informado: Florianópolis.
+  </footer>
+  <div class="tooltip" id="tooltip" role="status"></div>
+  <script>
+    const tooltip = document.getElementById('tooltip');
+    const show = (event, marker) => {
+      tooltip.innerHTML = `<strong>${marker.dataset.title}</strong><span><b>Cidade:</b> ${marker.dataset.city}</span><span><b>Data:</b> ${marker.dataset.date}</span><span><b>Contato:</b> ${marker.dataset.contact}</span><span><b>Coordenadas:</b> ${marker.dataset.lat}, ${marker.dataset.lon}</span><span><b>Trecho anterior:</b> ${marker.dataset.leg} km · <b>Acumulado:</b> ${marker.dataset.total} km</span>`;
+      tooltip.style.left = `${Math.min(event.clientX + 16, window.innerWidth - tooltip.offsetWidth - 18)}px`;
+      tooltip.style.top = `${Math.min(event.clientY + 16, window.innerHeight - tooltip.offsetHeight - 18)}px`;
+      tooltip.style.opacity = 1;
+    };
+    const hide = () => { tooltip.style.opacity = 0; };
+    document.querySelectorAll('.marker').forEach((marker) => {
+      marker.addEventListener('mousemove', (event) => show(event, marker));
+      marker.addEventListener('mouseenter', (event) => show(event, marker));
+      marker.addEventListener('focus', (event) => show({ clientX: window.innerWidth / 2, clientY: 120 }, marker));
+      marker.addEventListener('mouseleave', hide);
+      marker.addEventListener('blur', hide);
+    });
+  </script>
+</body>
+</html>
