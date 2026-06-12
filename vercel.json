@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "installCommand": "echo 'Static site: skipping dependency installation'",
+  "buildCommand": "echo 'Static site ready'",
+  "outputDirectory": ".",
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    }
+  ]
+}
