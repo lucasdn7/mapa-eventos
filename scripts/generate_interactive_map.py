@@ -18,7 +18,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 EVENTS_CSV = ROOT / "data" / "events_sc_2026.csv"
 BOUNDARY_GEOJSON = ROOT / "data" / "santa_catarina_boundary.geojson"
-OUTPUT_HTML = ROOT / "public" / "santa_catarina_eventos_2026.html"
+OUTPUT_HTML = ROOT / "santa_catarina_eventos_2026.html"
+PUBLIC_OUTPUT_HTML = ROOT / "public" / "santa_catarina_eventos_2026.html"
 WIDTH = 1100
 HEIGHT = 760
 PADDING = 58
@@ -141,9 +142,11 @@ def make_html(events: list[dict[str, str]], boundary: list[tuple[float, float]])
 def main() -> None:
     events = read_events()
     boundary = read_boundary()
-    OUTPUT_HTML.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_HTML.write_text(make_html(events, boundary), encoding="utf-8")
-    print(f"Mapa gerado em {OUTPUT_HTML.relative_to(ROOT)}")
+    html_text = make_html(events, boundary)
+    OUTPUT_HTML.write_text(html_text, encoding="utf-8")
+    PUBLIC_OUTPUT_HTML.parent.mkdir(parents=True, exist_ok=True)
+    PUBLIC_OUTPUT_HTML.write_text(html_text, encoding="utf-8")
+    print(f"Mapa gerado em {OUTPUT_HTML.relative_to(ROOT)} e {PUBLIC_OUTPUT_HTML.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
