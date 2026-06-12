@@ -8,6 +8,42 @@
   <style>
     :root { --bg: #07111f; --panel: #0f1d33; --line: #ffb703; --pin: #e63946; --text: #f8fafc; --muted: #b6c2d2; --sc: #10b981; }
     * { box-sizing: border-box; }
+
+    /* Leaflet layout fallback.
+       The hosted Leaflet CSS can be blocked or delayed in production. When that
+       happens, map tiles render as normal images and markers disappear. These
+       core rules keep the cartographic map, event markers, route and popups
+       correctly positioned even if the external stylesheet is unavailable. */
+    .leaflet-container { overflow: hidden; position: relative; outline-offset: 1px; touch-action: none; }
+    .leaflet-pane, .leaflet-tile, .leaflet-marker-icon, .leaflet-marker-shadow, .leaflet-tile-container, .leaflet-pane > svg, .leaflet-pane > canvas, .leaflet-zoom-box, .leaflet-image-layer, .leaflet-layer { left: 0; position: absolute; top: 0; }
+    .leaflet-container img.leaflet-tile { border: 0; height: 256px; max-width: none !important; padding: 0; width: 256px; }
+    .leaflet-container .leaflet-marker-icon { display: block; }
+    .leaflet-tile-pane { z-index: 200; }
+    .leaflet-overlay-pane { z-index: 400; }
+    .leaflet-shadow-pane { z-index: 500; }
+    .leaflet-marker-pane { z-index: 600; }
+    .leaflet-tooltip-pane { z-index: 650; }
+    .leaflet-popup-pane { z-index: 700; }
+    .leaflet-control { position: relative; z-index: 800; }
+    .leaflet-top, .leaflet-bottom { pointer-events: none; position: absolute; z-index: 1000; }
+    .leaflet-top { top: 0; }
+    .leaflet-right { right: 0; }
+    .leaflet-bottom { bottom: 0; }
+    .leaflet-left { left: 0; }
+    .leaflet-control { clear: both; float: left; pointer-events: auto; }
+    .leaflet-right .leaflet-control { float: right; }
+    .leaflet-top .leaflet-control { margin-top: 10px; }
+    .leaflet-bottom .leaflet-control { margin-bottom: 10px; }
+    .leaflet-left .leaflet-control { margin-left: 10px; }
+    .leaflet-right .leaflet-control { margin-right: 10px; }
+    .leaflet-control-zoom a { background: #fff; border-bottom: 1px solid #ccc; color: #111; display: block; font: 700 18px/28px Arial, sans-serif; height: 30px; text-align: center; text-decoration: none; width: 30px; }
+    .leaflet-control-attribution { background: rgba(255,255,255,.85); color: #333; font-size: 11px; padding: 2px 6px; }
+    .leaflet-popup { margin-bottom: 20px; position: absolute; text-align: center; }
+    .leaflet-popup-content-wrapper { background: #fff; box-shadow: 0 3px 14px rgba(0,0,0,.4); padding: 1px; text-align: left; }
+    .leaflet-popup-content { margin: 13px 20px; }
+    .leaflet-popup-tip-container { height: 20px; left: 50%; margin-left: -20px; overflow: hidden; pointer-events: none; position: absolute; width: 40px; }
+    .leaflet-popup-tip { background: #fff; box-shadow: 0 3px 14px rgba(0,0,0,.4); height: 17px; margin: -10px auto 0; padding: 1px; transform: rotate(45deg); width: 17px; }
+    .leaflet-tooltip { background: rgba(15, 23, 42, .92); border: 1px solid rgba(255,255,255,.3); border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,.28); color: #fff; padding: 6px 9px; position: absolute; white-space: nowrap; }
     body { margin: 0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: radial-gradient(circle at top, #17324d 0, var(--bg) 58%); color: var(--text); }
     header { padding: 32px clamp(18px, 4vw, 54px) 18px; }
     h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 4vw, 3.2rem); line-height: 1.05; }
@@ -121,6 +157,7 @@
     });
 
     map.fitBounds(L.featureGroup([scLayer, route, markerGroup]).getBounds().pad(0.08));
+    setTimeout(() => map.invalidateSize(), 0);
   </script>
 </body>
 </html>
