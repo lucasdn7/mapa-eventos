@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Eventos de Veículos Antigos em Santa Catarina — 2026</title>
+  <style>
+    :root { --bg: #07111f; --panel: #0f1d33; --line: #ffb703; --pin: #e63946; --text: #f8fafc; --muted: #b6c2d2; --map: #1b4965; --sc: #77c9a3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: radial-gradient(circle at top, #17324d 0, var(--bg) 58%); color: var(--text); }
+    header { padding: 32px clamp(18px, 4vw, 54px) 18px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 4vw, 3.2rem); line-height: 1.05; }
+    header p { margin: 0; color: var(--muted); max-width: 980px; }
+    main { display: grid; grid-template-columns: minmax(320px, 1.8fr) minmax(300px, .9fr); gap: 22px; padding: 14px clamp(18px, 4vw, 54px) 42px; }
+    .card { background: color-mix(in srgb, var(--panel) 88%, transparent); border: 1px solid rgba(255,255,255,.11); border-radius: 24px; box-shadow: 0 20px 80px rgba(0,0,0,.28); overflow: hidden; }
+    .map-wrap { padding: 18px; }
+    svg { width: 100%; height: auto; display: block; border-radius: 18px; background: linear-gradient(150deg, #08263d, #0e4263); }
+    .boundary { fill: rgba(119, 201, 163, .26); stroke: var(--sc); stroke-width: 3; filter: drop-shadow(0 8px 18px rgba(0,0,0,.35)); }
+    .route { fill: none; stroke: var(--line); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 9 10; filter: drop-shadow(0 2px 7px rgba(255,183,3,.45)); }
+    .marker circle { fill: var(--pin); stroke: #fff; stroke-width: 3; cursor: pointer; transition: transform .18s ease, fill .18s ease; transform-box: fill-box; transform-origin: center; }
+    .marker text { fill: #fff; font-size: 12px; font-weight: 800; pointer-events: none; }
+    .marker:hover circle, .marker:focus circle { fill: #fb8500; transform: scale(1.32); }
+    .tooltip { position: fixed; z-index: 10; width: min(340px, calc(100vw - 32px)); padding: 14px 16px; border-radius: 16px; background: rgba(3, 7, 18, .94); border: 1px solid rgba(255,255,255,.18); box-shadow: 0 18px 50px rgba(0,0,0,.45); pointer-events: none; opacity: 0; transform: translate(12px, 12px); transition: opacity .12s ease; }
+    .tooltip strong { display: block; font-size: 1rem; margin-bottom: 7px; color: #fff; }
+    .tooltip span { display: block; color: var(--muted); margin-top: 3px; }
+    aside { padding: 18px; }
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .stat { padding: 14px; background: rgba(255,255,255,.06); border-radius: 16px; }
+    .stat b { display: block; font-size: 1.4rem; color: #fff; }
+    .stat small { color: var(--muted); }
+    .table-wrap { max-height: 610px; overflow: auto; border-radius: 16px; border: 1px solid rgba(255,255,255,.08); }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th, td { padding: 10px 11px; border-bottom: 1px solid rgba(255,255,255,.08); vertical-align: top; }
+    th { position: sticky; top: 0; background: #122238; text-align: left; color: #fff; }
+    td { color: var(--muted); }
+    td:nth-child(1), td:nth-child(5), td:nth-child(6) { color: #fff; font-weight: 700; }
+    footer { color: var(--muted); padding: 0 clamp(18px, 4vw, 54px) 38px; font-size: .9rem; }
+    @media (max-width: 980px) { main { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Rota interativa de eventos em Santa Catarina — 2026</h1>
+    <p>Mapa filtrado para Santa Catarina, com marcadores nas cidades dos eventos. Passe o mouse ou navegue com Tab pelos pontos para ver evento, data, contato, coordenadas e distância do trecho.</p>
+  </header>
+  <main>
+    <section class="card map-wrap" aria-label="Mapa dos eventos em Santa Catarina">
+      <svg viewBox="0 0 1100 760" role="img" aria-labelledby="map-title map-desc">
+        <title id="map-title">Mapa interativo dos eventos de veículos antigos em Santa Catarina</title>
+        <desc id="map-desc">Os marcadores numerados seguem a rota por vizinho mais próximo, começando em Florianópolis.</desc>
+        <polygon class="boundary" points="58.0,135.72 154.79,58.0 334.02,69.1 531.18,64.66 746.26,69.1 997.19,60.22 1040.21,135.72 1018.7,291.17 1042.0,413.31 988.23,535.45 853.8,657.59 728.34,702.0 531.18,590.97 351.95,468.83 208.56,313.38 58.0,213.45 58.0,135.72"></polygon>
+        <polyline class="route" points="1006.48,423.28 991.17,344.71 990.88,289.08 984.56,271.21 956.85,269.48 912.79,272.41 893.79,233.57 913.65,176.83 952.62,136.7 857.64,124.73 832.74,125.6 781.16,93.86 758.11,348.6 687.74,472.4 758.59,578.51 873.21,592.94 922.92,617.9 984.59,566.54 922.07,440.56 927.72,417.64 539.37,293.08 210.06,257.75 149.07,188.75"></polyline>
+        <g class="marker" tabindex="0" data-title="V Rally de Floripa" data-city="Florianópolis" data-date="20 de junho de 2026" data-contact="Célio Vieira — 48 9145-3377" data-lat="-27.5949" data-lon="-48.5482" data-leg="0.0" data-total="0.0"><circle cx="1006.48" cy="423.28" r="12"/><text x="1006.48" y="427.28" text-anchor="middle">1</text><title>1. V Rally de Floripa
+Cidade: Florianópolis
+Data: 20 de junho de 2026
+Contato: Célio Vieira — 48 9145-3377
+Coordenadas: -27.5949, -48.5482
+Trecho anterior: 0.0 km | Acumulado: 0.0 km</title></g>
+<g class="marker" tabindex="0" data-title="3º Encontro Antigos e Amigos" data-city="Tijucas" data-date="15 e 16 de agosto de 2026" data-contact="Moishés — 48 9948-9644" data-lat="-27.2411" data-lon="-48.6336" data-leg="40.2" data-total="40.2"><circle cx="991.17" cy="344.71" r="12"/><text x="991.17" y="348.71" text-anchor="middle">2</text><title>2. 3º Encontro Antigos e Amigos
+Cidade: Tijucas
+Data: 15 e 16 de agosto de 2026
+Contato: Moishés — 48 9948-9644
+Coordenadas: -27.2411, -48.6336
+Trecho anterior: 40.2 km | Acumulado: 40.2 km</title></g>
+<g class="marker" tabindex="0" data-title="XIV Santa Catarina Custom Show" data-city="Balneário Camboriú" data-date="10, 11 e 12 de julho de 2026" data-contact="Rodrigo — 47 8480-8712" data-lat="-26.9906" data-lon="-48.6352" data-leg="27.9" data-total="68.1"><circle cx="990.88" cy="289.08" r="12"/><text x="990.88" y="293.08" text-anchor="middle">3</text><title>3. XIV Santa Catarina Custom Show
+Cidade: Balneário Camboriú
+Data: 10, 11 e 12 de julho de 2026
+Contato: Rodrigo — 47 8480-8712
+Coordenadas: -26.9906, -48.6352
+Trecho anterior: 27.9 km | Acumulado: 68.1 km</title></g>
+<g class="marker" tabindex="0" data-title="Praia dos Clássicos" data-city="Itajaí" data-date="17 de novembro de 2026" data-contact="Romão — 47 9213-1431" data-lat="-26.9101" data-lon="-48.6705" data-leg="9.6" data-total="77.7"><circle cx="984.56" cy="271.21" r="12"/><text x="984.56" y="275.21" text-anchor="middle">4</text><title>4. Praia dos Clássicos
+Cidade: Itajaí
+Data: 17 de novembro de 2026
+Contato: Romão — 47 9213-1431
+Coordenadas: -26.9101, -48.6705
+Trecho anterior: 9.6 km | Acumulado: 77.7 km</title></g>
+<g class="marker" tabindex="0" data-title="8º Encontro de Carros Antigos Orquidário do Irá" data-city="Ilhota" data-date="30 de novembro de 2026" data-contact="Osiel — 47 9950-1382" data-lat="-26.9023" data-lon="-48.8251" data-leg="15.4" data-total="93.1"><circle cx="956.85" cy="269.48" r="12"/><text x="956.85" y="273.48" text-anchor="middle">5</text><title>5. 8º Encontro de Carros Antigos Orquidário do Irá
+Cidade: Ilhota
+Data: 30 de novembro de 2026
+Contato: Osiel — 47 9950-1382
+Coordenadas: -26.9023, -48.8251
+Trecho anterior: 15.4 km | Acumulado: 93.1 km</title></g>
+<g class="marker" tabindex="0" data-title="Auto&#x27;s Memories Days — 3ª edição" data-city="Blumenau" data-date="25 e 26 de julho de 2026" data-contact="Luciano Eccel — 47 9164-3106" data-lat="-26.9155" data-lon="-49.0709" data-leg="24.4" data-total="117.5"><circle cx="912.79" cy="272.41" r="12"/><text x="912.79" y="276.41" text-anchor="middle">6</text><title>6. Auto&#x27;s Memories Days — 3ª edição
+Cidade: Blumenau
+Data: 25 e 26 de julho de 2026
+Contato: Luciano Eccel — 47 9164-3106
+Coordenadas: -26.9155, -49.0709
+Trecho anterior: 24.4 km | Acumulado: 117.5 km</title></g>
+<g class="marker" tabindex="0" data-title="19ª Edição Volks Friends — Encontro de Fuscas e Derivados" data-city="Pomerode" data-date="3 a 6 de dezembro de 2026" data-contact="Jean — 47 98408-1082" data-lat="-26.7406" data-lon="-49.1769" data-leg="22.1" data-total="139.6"><circle cx="893.79" cy="233.57" r="12"/><text x="893.79" y="237.57" text-anchor="middle">7</text><title>7. 19ª Edição Volks Friends — Encontro de Fuscas e Derivados
+Cidade: Pomerode
+Data: 3 a 6 de dezembro de 2026
+Contato: Jean — 47 98408-1082
+Coordenadas: -26.7406, -49.1769
+Trecho anterior: 22.1 km | Acumulado: 139.6 km</title></g>
+<g class="marker" tabindex="0" data-title="10º Encontro de Veículos Antigos de Jaraguá do Sul" data-city="Jaraguá do Sul" data-date="4, 5 e 6 de setembro de 2026" data-contact="Marlon — 47 9667-0589" data-lat="-26.4851" data-lon="-49.0661" data-leg="30.5" data-total="170.1"><circle cx="913.65" cy="176.83" r="12"/><text x="913.65" y="180.83" text-anchor="middle">8</text><title>8. 10º Encontro de Veículos Antigos de Jaraguá do Sul
+Cidade: Jaraguá do Sul
+Data: 4, 5 e 6 de setembro de 2026
+Contato: Marlon — 47 9667-0589
+Coordenadas: -26.4851, -49.0661
+Trecho anterior: 30.5 km | Acumulado: 170.1 km</title></g>
+<g class="marker" tabindex="0" data-title="4ª Edição do Dia Nacional da Kombi" data-city="Joinville" data-date="29 de agosto de 2026" data-contact="instagram.com/dnk_joinville/" data-lat="-26.3044" data-lon="-48.8487" data-leg="29.5" data-total="199.6"><circle cx="952.62" cy="136.7" r="12"/><text x="952.62" y="140.7" text-anchor="middle">9</text><title>9. 4ª Edição do Dia Nacional da Kombi
+Cidade: Joinville
+Data: 29 de agosto de 2026
+Contato: instagram.com/dnk_joinville/
+Coordenadas: -26.3044, -48.8487
+Trecho anterior: 29.5 km | Acumulado: 199.6 km</title></g>
+<g class="marker" tabindex="0" data-title="21º Encontro de Veículos Antigos de São Bento do Sul" data-city="São Bento do Sul" data-date="3, 4 e 5 de julho de 2026" data-contact="Mauro Scatolon — 47 9986-4060" data-lat="-26.2505" data-lon="-49.3786" data-leg="53.2" data-total="252.8"><circle cx="857.64" cy="124.73" r="12"/><text x="857.64" y="128.73000000000002" text-anchor="middle">10</text><title>10. 21º Encontro de Veículos Antigos de São Bento do Sul
+Cidade: São Bento do Sul
+Data: 3, 4 e 5 de julho de 2026
+Contato: Mauro Scatolon — 47 9986-4060
+Coordenadas: -26.2505, -49.3786
+Trecho anterior: 53.2 km | Acumulado: 252.8 km</title></g>
+<g class="marker" tabindex="0" data-title="16ª Edição VOLKSKUQUE" data-city="Rio Negrinho" data-date="5, 6, 7 e 8 de novembro de 2026" data-contact="41 9514-7984" data-lat="-26.2544" data-lon="-49.5175" data-leg="13.9" data-total="266.6"><circle cx="832.74" cy="125.6" r="12"/><text x="832.74" y="129.6" text-anchor="middle">11</text><title>11. 16ª Edição VOLKSKUQUE
+Cidade: Rio Negrinho
+Data: 5, 6, 7 e 8 de novembro de 2026
+Contato: 41 9514-7984
+Coordenadas: -26.2544, -49.5175
+Trecho anterior: 13.9 km | Acumulado: 266.6 km</title></g>
+<g class="marker" tabindex="0" data-title="7º Encontro de Carros Antigos e 6º Opala Riomafra" data-city="Mafra" data-date="13 de dezembro de 2026" data-contact="edersacomori@outlook.com.br" data-lat="-26.1115" data-lon="-49.8053" data-leg="32.8" data-total="299.4"><circle cx="781.16" cy="93.86" r="12"/><text x="781.16" y="97.86" text-anchor="middle">12</text><title>12. 7º Encontro de Carros Antigos e 6º Opala Riomafra
+Cidade: Mafra
+Data: 13 de dezembro de 2026
+Contato: edersacomori@outlook.com.br
+Coordenadas: -26.1115, -49.8053
+Trecho anterior: 32.8 km | Acumulado: 299.4 km</title></g>
+<g class="marker" tabindex="0" data-title="Encontro de Antigos de Pouso Redondo" data-city="Pouso Redondo" data-date="8 de novembro de 2026" data-contact="Romão — 47 9213-1431" data-lat="-27.2586" data-lon="-49.9339" data-leg="128.2" data-total="427.6"><circle cx="758.11" cy="348.6" r="12"/><text x="758.11" y="352.6" text-anchor="middle">13</text><title>13. Encontro de Antigos de Pouso Redondo
+Cidade: Pouso Redondo
+Data: 8 de novembro de 2026
+Contato: Romão — 47 9213-1431
+Coordenadas: -27.2586, -49.9339
+Trecho anterior: 128.2 km | Acumulado: 427.6 km</title></g>
+<g class="marker" tabindex="0" data-title="2º Encontro de Veículos Antigos e Clássicos de Lages" data-city="Lages" data-date="1 e 2 de agosto de 2026" data-contact="Sérgio Fontana — 49 9983-0570" data-lat="-27.8161" data-lon="-50.3265" data-leg="73.1" data-total="500.7"><circle cx="687.74" cy="472.4" r="12"/><text x="687.74" y="476.4" text-anchor="middle">14</text><title>14. 2º Encontro de Veículos Antigos e Clássicos de Lages
+Cidade: Lages
+Data: 1 e 2 de agosto de 2026
+Contato: Sérgio Fontana — 49 9983-0570
+Coordenadas: -27.8161, -50.3265
+Trecho anterior: 73.1 km | Acumulado: 500.7 km</title></g>
+<g class="marker" tabindex="0" data-title="2º Encontro Antigos da Neve" data-city="São Joaquim" data-date="8 de novembro de 2026" data-contact="João Paulo — 49 9135-0324" data-lat="-28.2939" data-lon="-49.9312" data-leg="65.8" data-total="566.5"><circle cx="758.59" cy="578.51" r="12"/><text x="758.59" y="582.51" text-anchor="middle">15</text><title>15. 2º Encontro Antigos da Neve
+Cidade: São Joaquim
+Data: 8 de novembro de 2026
+Contato: João Paulo — 49 9135-0324
+Coordenadas: -28.2939, -49.9312
+Trecho anterior: 65.8 km | Acumulado: 566.5 km</title></g>
+<g class="marker" tabindex="0" data-title="5ª Exposição de Veículos Antigos de Orleans" data-city="Orleans" data-date="16 de agosto de 2026" data-contact="Roberto — 48 9118-9353" data-lat="-28.3589" data-lon="-49.2917" data-leg="63.0" data-total="629.5"><circle cx="873.21" cy="592.94" r="12"/><text x="873.21" y="596.94" text-anchor="middle">16</text><title>16. 5ª Exposição de Veículos Antigos de Orleans
+Cidade: Orleans
+Data: 16 de agosto de 2026
+Contato: Roberto — 48 9118-9353
+Coordenadas: -28.3589, -49.2917
+Trecho anterior: 63.0 km | Acumulado: 629.5 km</title></g>
+<g class="marker" tabindex="0" data-title="9º Encontro de Antigos e Campistas" data-city="Tubarão" data-date="12 e 13 de setembro de 2026" data-contact="Ademir — 48 99956-9391" data-lat="-28.4713" data-lon="-49.0144" data-leg="29.9" data-total="659.4"><circle cx="922.92" cy="617.9" r="12"/><text x="922.92" y="621.9" text-anchor="middle">17</text><title>17. 9º Encontro de Antigos e Campistas
+Cidade: Tubarão
+Data: 12 e 13 de setembro de 2026
+Contato: Ademir — 48 99956-9391
+Coordenadas: -28.4713, -49.0144
+Trecho anterior: 29.9 km | Acumulado: 659.4 km</title></g>
+<g class="marker" tabindex="0" data-title="6º Encontro de Carros Antigos da Zimba" data-city="Imbituba" data-date="15 de novembro de 2026" data-contact="Luciano — 48 9623-8680" data-lat="-28.24" data-lon="-48.6703" data-leg="42.4" data-total="701.7"><circle cx="984.59" cy="566.54" r="12"/><text x="984.59" y="570.54" text-anchor="middle">18</text><title>18. 6º Encontro de Carros Antigos da Zimba
+Cidade: Imbituba
+Data: 15 de novembro de 2026
+Contato: Luciano — 48 9623-8680
+Coordenadas: -28.24, -48.6703
+Trecho anterior: 42.4 km | Acumulado: 701.7 km</title></g>
+<g class="marker" tabindex="0" data-title="11º Encontro de Carros Antigos de Rancho Queimado" data-city="Rancho Queimado" data-date="27 de julho de 2026" data-contact="Jakson — 48 8480-8712" data-lat="-27.6727" data-lon="-49.0191" data-leg="71.8" data-total="773.5"><circle cx="922.07" cy="440.56" r="12"/><text x="922.07" y="444.56" text-anchor="middle">19</text><title>19. 11º Encontro de Carros Antigos de Rancho Queimado
+Cidade: Rancho Queimado
+Data: 27 de julho de 2026
+Contato: Jakson — 48 8480-8712
+Coordenadas: -27.6727, -49.0191
+Trecho anterior: 71.8 km | Acumulado: 773.5 km</title></g>
+<g class="marker" tabindex="0" data-title="5º Encontro de Carros Antigos de Angelina" data-city="Angelina" data-date="29 de novembro de 2026" data-contact="49 9801-7359" data-lat="-27.5695" data-lon="-48.9876" data-leg="11.9" data-total="785.4"><circle cx="927.72" cy="417.64" r="12"/><text x="927.72" y="421.64" text-anchor="middle">20</text><title>20. 5º Encontro de Carros Antigos de Angelina
+Cidade: Angelina
+Data: 29 de novembro de 2026
+Contato: 49 9801-7359
+Coordenadas: -27.5695, -48.9876
+Trecho anterior: 11.9 km | Acumulado: 785.4 km</title></g>
+<g class="marker" tabindex="0" data-title="5º Natal dos Antigos" data-city="Videira" data-date="21 e 22 de novembro de 2026" data-contact="Alison — 49 9995-5781" data-lat="-27.0086" data-lon="-51.1543" data-leg="223.0" data-total="1008.4"><circle cx="539.37" cy="293.08" r="12"/><text x="539.37" y="297.08" text-anchor="middle">21</text><title>21. 5º Natal dos Antigos
+Cidade: Videira
+Data: 21 e 22 de novembro de 2026
+Contato: Alison — 49 9995-5781
+Coordenadas: -27.0086, -51.1543
+Trecho anterior: 223.0 km | Acumulado: 1008.4 km</title></g>
+<g class="marker" tabindex="0" data-title="6º Encontro de Carro Antigo de Pinhalzinho" data-city="Pinhalzinho" data-date="14, 15 e 16 de agosto de 2026" data-contact="Ricardo — 49 8816-6465" data-lat="-26.8495" data-lon="-52.9916" data-leg="183.0" data-total="1191.4"><circle cx="210.06" cy="257.75" r="12"/><text x="210.06" y="261.75" text-anchor="middle">22</text><title>22. 6º Encontro de Carro Antigo de Pinhalzinho
+Cidade: Pinhalzinho
+Data: 14, 15 e 16 de agosto de 2026
+Contato: Ricardo — 49 8816-6465
+Coordenadas: -26.8495, -52.9916
+Trecho anterior: 183.0 km | Acumulado: 1191.4 km</title></g>
+<g class="marker" tabindex="0" data-title="8º Encontro de Carros Antigos Os Caravelhos" data-city="Anchieta" data-date="17 e 18 de outubro de 2026" data-contact="Vereador Binho — 49 9941-0170" data-lat="-26.5388" data-lon="-53.3319" data-leg="48.3" data-total="1239.8"><circle cx="149.07" cy="188.75" r="12"/><text x="149.07" y="192.75" text-anchor="middle">23</text><title>23. 8º Encontro de Carros Antigos Os Caravelhos
+Cidade: Anchieta
+Data: 17 e 18 de outubro de 2026
+Contato: Vereador Binho — 49 9941-0170
+Coordenadas: -26.5388, -53.3319
+Trecho anterior: 48.3 km | Acumulado: 1239.8 km</title></g>
+      </svg>
+    </section>
+    <aside class="card">
+      <div class="stats">
+        <div class="stat"><b>23</b><small>eventos mapeados</small></div>
+        <div class="stat"><b>1239.8 km</b><small>rota aproximada</small></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Evento</th><th>Cidade</th><th>Data</th><th>km trecho</th><th>km total</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>V Rally de Floripa</td><td>Florianópolis</td><td>20 de junho de 2026</td><td>0.0</td><td>0.0</td></tr>
+<tr><td>2</td><td>3º Encontro Antigos e Amigos</td><td>Tijucas</td><td>15 e 16 de agosto de 2026</td><td>40.2</td><td>40.2</td></tr>
+<tr><td>3</td><td>XIV Santa Catarina Custom Show</td><td>Balneário Camboriú</td><td>10, 11 e 12 de julho de 2026</td><td>27.9</td><td>68.1</td></tr>
+<tr><td>4</td><td>Praia dos Clássicos</td><td>Itajaí</td><td>17 de novembro de 2026</td><td>9.6</td><td>77.7</td></tr>
+<tr><td>5</td><td>8º Encontro de Carros Antigos Orquidário do Irá</td><td>Ilhota</td><td>30 de novembro de 2026</td><td>15.4</td><td>93.1</td></tr>
+<tr><td>6</td><td>Auto&#x27;s Memories Days — 3ª edição</td><td>Blumenau</td><td>25 e 26 de julho de 2026</td><td>24.4</td><td>117.5</td></tr>
+<tr><td>7</td><td>19ª Edição Volks Friends — Encontro de Fuscas e Derivados</td><td>Pomerode</td><td>3 a 6 de dezembro de 2026</td><td>22.1</td><td>139.6</td></tr>
+<tr><td>8</td><td>10º Encontro de Veículos Antigos de Jaraguá do Sul</td><td>Jaraguá do Sul</td><td>4, 5 e 6 de setembro de 2026</td><td>30.5</td><td>170.1</td></tr>
+<tr><td>9</td><td>4ª Edição do Dia Nacional da Kombi</td><td>Joinville</td><td>29 de agosto de 2026</td><td>29.5</td><td>199.6</td></tr>
+<tr><td>10</td><td>21º Encontro de Veículos Antigos de São Bento do Sul</td><td>São Bento do Sul</td><td>3, 4 e 5 de julho de 2026</td><td>53.2</td><td>252.8</td></tr>
+<tr><td>11</td><td>16ª Edição VOLKSKUQUE</td><td>Rio Negrinho</td><td>5, 6, 7 e 8 de novembro de 2026</td><td>13.9</td><td>266.6</td></tr>
+<tr><td>12</td><td>7º Encontro de Carros Antigos e 6º Opala Riomafra</td><td>Mafra</td><td>13 de dezembro de 2026</td><td>32.8</td><td>299.4</td></tr>
+<tr><td>13</td><td>Encontro de Antigos de Pouso Redondo</td><td>Pouso Redondo</td><td>8 de novembro de 2026</td><td>128.2</td><td>427.6</td></tr>
+<tr><td>14</td><td>2º Encontro de Veículos Antigos e Clássicos de Lages</td><td>Lages</td><td>1 e 2 de agosto de 2026</td><td>73.1</td><td>500.7</td></tr>
+<tr><td>15</td><td>2º Encontro Antigos da Neve</td><td>São Joaquim</td><td>8 de novembro de 2026</td><td>65.8</td><td>566.5</td></tr>
+<tr><td>16</td><td>5ª Exposição de Veículos Antigos de Orleans</td><td>Orleans</td><td>16 de agosto de 2026</td><td>63.0</td><td>629.5</td></tr>
+<tr><td>17</td><td>9º Encontro de Antigos e Campistas</td><td>Tubarão</td><td>12 e 13 de setembro de 2026</td><td>29.9</td><td>659.4</td></tr>
+<tr><td>18</td><td>6º Encontro de Carros Antigos da Zimba</td><td>Imbituba</td><td>15 de novembro de 2026</td><td>42.4</td><td>701.7</td></tr>
+<tr><td>19</td><td>11º Encontro de Carros Antigos de Rancho Queimado</td><td>Rancho Queimado</td><td>27 de julho de 2026</td><td>71.8</td><td>773.5</td></tr>
+<tr><td>20</td><td>5º Encontro de Carros Antigos de Angelina</td><td>Angelina</td><td>29 de novembro de 2026</td><td>11.9</td><td>785.4</td></tr>
+<tr><td>21</td><td>5º Natal dos Antigos</td><td>Videira</td><td>21 e 22 de novembro de 2026</td><td>223.0</td><td>1008.4</td></tr>
+<tr><td>22</td><td>6º Encontro de Carro Antigo de Pinhalzinho</td><td>Pinhalzinho</td><td>14, 15 e 16 de agosto de 2026</td><td>183.0</td><td>1191.4</td></tr>
+<tr><td>23</td><td>8º Encontro de Carros Antigos Os Caravelhos</td><td>Anchieta</td><td>17 e 18 de outubro de 2026</td><td>48.3</td><td>1239.8</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </aside>
+  </main>
+  <footer>
+    Coordenadas representam o centro/município informado para cada evento, pois a lista não trouxe endereço de venue. A rota usa distância geodésica aproximada e heurística de vizinho mais próximo, partindo do primeiro evento informado: Florianópolis.
+  </footer>
+  <div class="tooltip" id="tooltip" role="status"></div>
+  <script>
+    const tooltip = document.getElementById('tooltip');
+    const show = (event, marker) => {
+      tooltip.innerHTML = `<strong>${marker.dataset.title}</strong><span><b>Cidade:</b> ${marker.dataset.city}</span><span><b>Data:</b> ${marker.dataset.date}</span><span><b>Contato:</b> ${marker.dataset.contact}</span><span><b>Coordenadas:</b> ${marker.dataset.lat}, ${marker.dataset.lon}</span><span><b>Trecho anterior:</b> ${marker.dataset.leg} km · <b>Acumulado:</b> ${marker.dataset.total} km</span>`;
+      tooltip.style.left = `${Math.min(event.clientX + 16, window.innerWidth - tooltip.offsetWidth - 18)}px`;
+      tooltip.style.top = `${Math.min(event.clientY + 16, window.innerHeight - tooltip.offsetHeight - 18)}px`;
+      tooltip.style.opacity = 1;
+    };
+    const hide = () => { tooltip.style.opacity = 0; };
+    document.querySelectorAll('.marker').forEach((marker) => {
+      marker.addEventListener('mousemove', (event) => show(event, marker));
+      marker.addEventListener('mouseenter', (event) => show(event, marker));
+      marker.addEventListener('focus', (event) => show({ clientX: window.innerWidth / 2, clientY: 120 }, marker));
+      marker.addEventListener('mouseleave', hide);
+      marker.addEventListener('blur', hide);
+    });
+  </script>
+</body>
+</html>
