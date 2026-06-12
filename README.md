@@ -1,6 +1,6 @@
 # mapa-eventos
 
-Mapa interativo dos eventos de veículos antigos em Santa Catarina em 2026.
+Mapa cartográfico interativo dos eventos de veículos antigos em Santa Catarina em 2026.
 
 ## O que foi criado
 
@@ -59,4 +59,4 @@ santa_catarina_eventos_2026.html
 
 ## Notas dos dados
 
-A lista fornecida informa cidade, data e contato, mas não informa endereço específico de venue. Por isso, os marcadores usam as coordenadas centrais dos municípios/cidades. A rota começa no primeiro evento informado, Florianópolis, e conecta sempre o evento geograficamente mais próximo ainda não visitado, até chegar aos eventos mais distantes.
+A lista fornecida informa cidade, data e contato, mas não informa endereço específico de venue. Por isso, os marcadores usam as coordenadas centrais dos municípios/cidades. A rota e a listagem lateral seguem a ordem cronológica pela data inicial de cada evento. O mapa usa base cartográfica OpenStreetMap com o contorno de Santa Catarina destacado.
