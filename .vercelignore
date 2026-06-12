@@ -1,0 +1,12 @@
+# O deploy no Vercel é apenas estático. Não envie scripts Python,
+# dependências geoespaciais ou dados-fonte para evitar detecção do runtime Python.
+scripts/
+*.py
+__pycache__/
+*.py[cod]
+requirements*.txt
+requirements-geospatial.txt
+data/
+public/
+README.md
+.gitignore
